@@ -25,6 +25,8 @@
    <!-- endbuild -->
 
    <!-- Include angular and the the Kambi widget api -->
+   <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.js"></script>
    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-sanitize.min.js"></script>
@@ -42,8 +44,17 @@
 </head>
 
 <body class="kw-body">
-<div class="kw-card l-flexbox l-vertical l-expander" ng-controller="appController" ng-cloak>
+<div id="fb_container" class="kw-card l-flexbox l-vertical l-expander" ng-controller="appController" ng-cloak>
 
+   <main>
+      <div class="fb fb-{{args.facebook.fb_embed_type}}"
+           data-width="100%"
+           data-tabs="{{args.facebook.tabs}}"
+           data-small-header="{{args.facebook.small_headers}}"
+           data-show-facepile="{{args.facebook.show_facepile}}"
+           data-adapt-container-width="{{args.facebook.adapt_container_width}}"
+           data-href="{{args.facebook.href}}"></div>
+   </main>
 
 </div>
 </body>

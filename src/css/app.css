@@ -771,4 +771,8 @@ Copyright (c) 2015 Daniel Eden
   -webkit-transition-duration: 0s;
 }
 
+.fb, .fb span, .fb span iframe[style] {
+  width: 100% !important;
+}
+
 /*# sourceMappingURL=app.css.map */
