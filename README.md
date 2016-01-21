@@ -44,7 +44,7 @@ __`client-widgets.js`__
 7. `small_headers` - boolean - OPTIONAL, default `true` - Use the small header instead
 8. `show_facepile` - boolean - OPTIONAL, default `false` - Show profile photos when friends like this
 9. `adapt_container_width` - boolean - OPTIONAL, default `true` - Try to fit inside the container width
-10.`appId` - String - OPTIONAL - To display a page content, a Facebook app with appId is required
+10. `appId` - String - OPTIONAL - To display a page content, a Facebook app with appId is required
 
 
 # Other tools
