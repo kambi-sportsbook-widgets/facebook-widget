@@ -13,17 +13,17 @@ __`client-widgets.js`__
     "order": 1,
     "widgetId": "Facebook widget",
     "args": {
-        'facebook': {
-            'status': true,
-            'xfbml': true,
-            'version': 'v2.4',
-            'fb_embed_type': 'post',
-            'href': 'https://www.facebook.com/uefachampionsleague/posts/1153137961399331',
-            'tabs': 'timeline',
-            'small_headers': true,
-            'show_facepile': false,
-            'adapt_container_width': true,
-            'appId': 'xyz123'
+        "facebook": {
+            "status": true,
+            "xfbml": true,
+            "version": "v2.4",
+            "fb_embed_type": "post",
+            "href": "https://www.facebook.com/uefachampionsleague/posts/1153137961399331",
+            "tabs": "timeline",
+            "small_headers": true,
+            "show_facepile": false,
+            "adapt_container_width": true,
+            "appId": "xyz123"
         }
     }
 },
