@@ -13,7 +13,6 @@
 
                $scope.defaultArgs = {
                   'facebook': {
-                     'lang': 'en_US',
                      'status': true,
                      'xfbml': true,
                      'version': 'v2.4',
@@ -27,7 +26,7 @@
                };
 
                /**
-                * Keep the height to 0 until we get data
+                * Default height
                 * @type {number}
                 */
                $scope.defaultHeight = 530;
@@ -64,7 +63,7 @@
                   }
                   js = document.createElement(s);
                   js.id = id;
-                  js.src = '//connect.facebook.net/' + $scope.args.facebook.lang + '/all.js';
+                  js.src = '//connect.facebook.net/' + $scope.locale + '/all.js';
                   fjs.parentNode.insertBefore(js, fjs);
                };
 
@@ -83,6 +82,8 @@
                 * Init the controller and init FB sdk
                 */
                $scope.init().then(function () {
+                  $scope.locale = $scope.getConfigValue('locale');
+
                   if ( $scope.args.facebook ) {
                      initFbSDK();
                   }
