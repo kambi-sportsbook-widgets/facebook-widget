@@ -1,3 +1,8 @@
+2016-01-21
+==========
+
+  * KSBWI-74 Updated readme and added locale
+
 2016-01-20
 ==========
 
