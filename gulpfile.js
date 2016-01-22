@@ -70,13 +70,18 @@
          .pipe(install());
    });
 
+   gulp.task('images', function () {
+      return gulp.src('./*.jpg')
+         .pipe(gulp.dest('./dist'));
+   });
+
    gulp.task('npm-build', false, ['npm-install'], function () {
       return gulp.src(npmLibs)
          .pipe(concat('libs.js'))
          .pipe(gulp.dest('./' + buildTemp + '/js'));
    });
 
-   gulp.task('build', false, ['js-concat', 'css', 'translations'], function () {
+   gulp.task('build', false, ['js-concat', 'css', 'images', 'translations'], function () {
       return gulp.src('./src/index.html')
          .pipe(htmlReplace({
             css: 'css/app.min.css',
