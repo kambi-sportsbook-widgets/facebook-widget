@@ -44,11 +44,20 @@
 
                // Global Facebook init function callback
                window.fbAsyncInit = function () {
-                  FB.init($scope.args.facebook);
-                  // Listen to render event and adjust widget height based on facebook height
-                  FB.Event.subscribe('xfbml.render', function () {
-                     var el_height = $('.fb').height();
-                     $scope.setWidgetHeight(el_height);
+                  /**
+                   * Init the controller and init FB sdk
+                   */
+                  $scope.init().then(function () {
+                     $scope.locale = $scope.getConfigValue('locale');
+
+                     if ( $scope.args.facebook ) {
+                        FB.init($scope.args.facebook);
+                        // Listen to render event and adjust widget height based on facebook height
+                        FB.Event.subscribe('xfbml.render', function () {
+                           var el_height = $('.fb').height();
+                           $scope.setWidgetHeight(el_height);
+                        });
+                     }
                   });
                };
 
@@ -78,17 +87,8 @@
                 */
                kambiWidgetService.requestPageInfo();
 
-               /**
-                * Init the controller and init FB sdk
-                */
-               $scope.init().then(function () {
-                  $scope.locale = $scope.getConfigValue('locale');
-
-                  if ( $scope.args.facebook ) {
-                     initFbSDK();
-                  }
-               });
-
+               // Init the Facebook SDK
+               initFbSDK();
 
             }]);
    })(angular.module('facebookWidget'));

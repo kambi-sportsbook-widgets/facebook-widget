@@ -62,11 +62,20 @@
 
                // Global Facebook init function callback
                window.fbAsyncInit = function () {
-                  FB.init($scope.args.facebook);
-                  // Listen to render event and adjust widget height based on facebook height
-                  FB.Event.subscribe('xfbml.render', function () {
-                     var el_height = $('.fb').height();
-                     $scope.setWidgetHeight(el_height);
+                  /**
+                   * Init the controller and init FB sdk
+                   */
+                  $scope.init().then(function () {
+                     $scope.locale = $scope.getConfigValue('locale');
+
+                     if ( $scope.args.facebook ) {
+                        FB.init($scope.args.facebook);
+                        // Listen to render event and adjust widget height based on facebook height
+                        FB.Event.subscribe('xfbml.render', function () {
+                           var el_height = $('.fb').height();
+                           $scope.setWidgetHeight(el_height);
+                        });
+                     }
                   });
                };
 
@@ -96,17 +105,8 @@
                 */
                kambiWidgetService.requestPageInfo();
 
-               /**
-                * Init the controller and init FB sdk
-                */
-               $scope.init().then(function () {
-                  $scope.locale = $scope.getConfigValue('locale');
-
-                  if ( $scope.args.facebook ) {
-                     initFbSDK();
-                  }
-               });
-
+               // Init the Facebook SDK
+               initFbSDK();
 
             }]);
    })(angular.module('facebookWidget'));
@@ -125,11 +125,15 @@
     * @name widgetCore.controller:widgetCoreController
     * @requires ng.$scope
     * @requires widgetCore.kambiWidgetService
+    * @requires widgetCore.kambiAPIService
+    * @requires widgetCore.coreUtilsService
+    * @requires ng.$q
+    * @requires ng.$controller
     * @description
     * This controller takes care of the common widget implementations and should be extended by the widgets own controller(s)
     * @author <michael@globalmouth.com>
     */
-   function widgetCoreController( $scope, $widgetService, $apiService, $q, $controller ) {
+   function widgetCoreController( $scope, $widgetService, $apiService, $coreUtilsService, $q, $controller ) {
 
 
       /**
@@ -153,12 +157,20 @@
 
       /**
        * @ngdoc property
+       * @name widgetCore.controller:pageInfoSet
+       * @propertyOf widgetCore.controller:widgetCoreController
+       * @description Flag to indicate that the page info have been received and set
+       * @returns {Boolean} Default false
+       */
+      $scope.pageInfoSet = false;
+
+      /**
+       * @ngdoc property
        * @name widgetCore.controller:oddsFormat
        * @propertyOf widgetCore.controller:widgetCoreController
        * @description The odds format,
        * @returns {String} Default 'decimal'
        */
-         //todo: Use the odds format setting
       $scope.oddsFormat = 'decimal';
 
       /**
@@ -231,8 +243,8 @@
             $apiService.setConfig(data);
 
             $scope.apiConfigSet = true;
-            // Check if both page info and widget args have been received, if so resolve the init promise
-            if ( $scope.apiConfigSet && $scope.appArgsSet ) {
+            // Check if api configuration, page info and widget args have been received, if so resolve the init promise
+            if ( $scope.apiConfigSet && $scope.appArgsSet && $scope.pageInfoSet ) {
                initDeferred.resolve();
             }
             // Remove this listener
@@ -251,12 +263,24 @@
             }
 
             $scope.appArgsSet = true;
-            // Check if both page info and widget args have been received, if so resolve the init promise
-            if ( $scope.apiConfigSet && $scope.appArgsSet ) {
+            // Check if api configuration, page info and widget args have been received, if so resolve the init promise
+            if ( $scope.apiConfigSet && $scope.appArgsSet && $scope.pageInfoSet ) {
                initDeferred.resolve();
             }
             // Remove this listener
             removeWidgetArgsListener();
+         });
+
+         // Self-removing listener for the PAGE:INFO event
+         var removePageInfoListener = $scope.$on('PAGE:INFO', function ( event, data ) {
+            $scope.setPageInfo(data);
+            $scope.pageInfoSet = true;
+            // Check if api configuration, page info and widget args have been received, if so resolve the init promise
+            if ( $scope.apiConfigSet && $scope.appArgsSet && $scope.pageInfoSet ) {
+               initDeferred.resolve();
+            }
+
+            removePageInfoListener();
          });
 
          // Set the height of the widget and request the height so we can be sure that we have the correct value from the Sportsbook
@@ -270,6 +294,10 @@
 
          // Request the widget arguments
          $widgetService.requestWidgetArgs();
+
+         // Request the page info
+         $widgetService.requestPageInfo();
+
 
          // Request the outcomes from the betslip so we can update our widget, this will also sets up a subscription for future betslip updates
          $widgetService.requestBetslipOutcomes();
@@ -413,6 +441,7 @@
          $widgetService.requestPageInfo();
       };
 
+
       /**
        * @ngdoc method
        * @name widgetCore.controller:widgetCoreController#requestOddsFormat
@@ -434,6 +463,97 @@
        */
       $scope.setOddsFormat = function ( oddsFormat ) {
          $scope.oddsFormat = oddsFormat;
+      };
+
+      /**
+       * @ngdoc method
+       * @name widgetCore.controller:widgetCoreController#getFormattedOdds
+       * @methodOf widgetCore.controller:widgetCoreController
+       * @description
+       * Takes an outcome object and returns the odds format based on the current oddsFormat setting
+       * @param {Object} outcome An outcome object
+       * @returns {number|String} The odds value for the current format
+       */
+      $scope.getFormattedOdds = function ( outcome ) {
+         switch ( $scope.oddsFormat ) {
+            case 'fractional':
+               return outcome.oddsFractional;
+            case 'american':
+               return outcome.oddsAmerican;
+            default:
+               return outcome.odds / 1000;
+
+         }
+      };
+
+
+      /**
+       * @ngdoc method
+       * @name widgetCore.controller:widgetCoreController#multiplyOdds
+       * @methodOf widgetCore.controller:widgetCoreController
+       * @description
+       * Takes an array of outcomes and multiplies them according to the current oddsFormat setting
+       * @param {Array.<Object>} outcomes An array of outcome objects
+       * @returns {number|String} The combined odds based on the current oddsFormat setting
+       */
+      $scope.multiplyOdds = function ( outcomes ) {
+
+         var i = 0, result = 1, len = outcomes.length;
+         for ( ; i < len; ++i ) {
+            result = result * outcomes[i].odds / 1000;
+         }
+         switch ( $scope.oddsFormat ) {
+            case 'american':
+               result = Math.round(result * 100) / 100;
+               if ( result < 2 ) {
+                  result = Math.round(-100 / (result - 1 ));
+               } else {
+                  result = (result - 1) * 100;
+                  // American odds need to show either + or - in front of value
+                  result = '+' + Math.round(result);
+               }
+               break;
+            case 'fractional':
+               /*
+                This is all guesswork and needs to be fixed
+                */
+               if ( result <= 3 ) {
+                  // Odds less than 10 are limited to one decimal
+                  //console.debug('Less than 3: ' + result + ' -> ' + $coreUtilsService.roundDown(result, 100));
+                  //result = Number(result).toFixed(1);
+                  result = $coreUtilsService.roundDown(result, 100);
+
+               } else if ( result <= 10 ) {
+                  // Odds less than 10 are limited to one decimal
+                  //console.debug('Less than 10: ' + result + ' -> ' + $coreUtilsService.roundDown(result, 10));
+                  //result = Number(result).toFixed(1);
+                  result = $coreUtilsService.roundDown(result, 10);
+
+               } else if ( result <= 14 ) {
+                  //Odd greater than 10 and lower 15 are rounded down to nearest 0.5, Note: 0.76 rounds down to 0.5 not 1
+                  //console.debug('Less than 10: ' + result + ' -> ' + $coreUtilsService.roundHalf(result));
+                  result = $coreUtilsService.roundHalf(result);
+
+               } else {
+                  //Odds greater than 14 are rounded down to nearest integer
+                  //console.debug('Greater than 14: ' + result + ' -> ' + Math.floor(result));
+                  result = Math.floor(result);
+               }
+               result = $coreUtilsService.convertToFraction(Number(result - 1).toFixed(2));
+               console.debug('Calculated fractional: ' + result.n + '/' + result.d);
+               result = result.n + '/' + result.d;
+               // Todo: Implement fractional odds
+               /*
+                For now we'll return nothing
+                */
+               result = '';
+               break;
+            default:
+               // Decimals are just rounded off to two decimal points
+               result = Math.round(result * 100) / 100;
+               break;
+         }
+         return result;
       };
 
       /**
@@ -486,6 +606,24 @@
             }
          }
          $scope.args = args;
+      };
+
+      /**
+       * @ngdoc method
+       * @name widgetCore.controller:widgetCoreController#setPageInfo
+       * @methodOf widgetCore.controller:widgetCoreController
+       * @description
+       * sets the page info for the app based on what we get from the PAGE:INFO event
+       * @param {Object} pageInfo Object containing date from the PAGE:INFO event
+       */
+      $scope.setPageInfo = function ( pageInfo ) {
+         // Check if the last character in the pageParam property is a slash, if not add it so we can use this property in filter requests
+         if ( pageInfo.pageType === 'filter' && pageInfo.pageParam.substr(-1) !== '/' ) {
+            pageInfo.pageParam += '/';
+         }
+
+
+         $scope.pageInfo = pageInfo;
       };
 
       /**
@@ -559,10 +697,16 @@
          $scope.currentHeight = height;
       });
 
+      // Add a listener for the odds format change, set the format and call $apply() to force an update in the view
+      $scope.$on('ODDS:FORMAT', function ( event, format ) {
+         $scope.setOddsFormat(format);
+         $scope.$apply();
+      });
    }
 
    (function ( $app ) {
-      return $app.controller('widgetCoreController', ['$scope', 'kambiWidgetService', 'kambiAPIService', '$q', '$controller', widgetCoreController]);
+      return $app.controller('widgetCoreController', ['$scope', 'kambiWidgetService', 'kambiAPIService', 'coreUtilsService', '$q', '$controller',
+         widgetCoreController]);
    })(angular.module('widgetCore', []));
 
 })();
@@ -762,6 +906,97 @@
 
       /**
        * @ngdoc service
+       * @name widgetCore.coreUtilsService
+       * @description
+       * Service that provides some utility methods
+       */
+      return $app.service('coreUtilsService', [function () {
+         var coreUtilsService = {};
+
+         /**
+          * @ngdoc overview
+          * @name widgetCore.coreUtilsService#roundHalf
+          * @methodOf widgetCore.coreUtilsService
+          * @description
+          * Rounds down a number to it's nearest multiple of 0.5
+          * @param {number} num The number to round down
+          * @returns {number} Returns a number
+          */
+         coreUtilsService.roundHalf = function ( num ) {
+            return Math.floor(num * 2) / 2;
+         };
+
+         /**
+          * @ngdoc overview
+          * @name widgetCore.coreUtilsService#roundDown
+          * @methodOf widgetCore.coreUtilsService
+          * @description
+          * Rounds down a number based on the specified divider
+          * @param {number} num The number to round down
+          * @param {number} divider The divider to use, 2 will round down to nearest 0.5 value. 4 down to nearest 0.25 etc.
+          * @returns {number} Returns a number
+          */
+         coreUtilsService.roundDown = function(num, divider) {
+            return Math.floor(num * divider) / divider;
+         };
+
+         /**
+          * @ngdoc overview
+          * @name widgetCore.coreUtilsService#convertToFraction
+          * @methodOf widgetCore.coreUtilsService
+          * @description
+          * Converts a number to an object describing a fraction
+          * @param {number} fraction The number to convert
+          * @returns {number} An object containing the numerator and denumerator - {n: number, d: number}
+          */
+         coreUtilsService.convertToFraction = function ( fraction ) {
+            var len = fraction.toString().length - 2;
+
+            var denominator = Math.pow(10, len);
+            var numerator = fraction * denominator;
+
+            var divisor = coreUtilsService.gcd(numerator, denominator);
+
+            numerator /= divisor;
+            denominator /= divisor;
+
+            return {
+               n: numerator,
+               d: denominator
+            };
+         };
+
+         /**
+          * @ngdoc overview
+          * @name widgetCore.coreUtilsService#gcd
+          * @methodOf widgetCore.coreUtilsService
+          * @description
+          * Finds the greatest common denominator based on a numerator and denominator
+          * @param {number} a The numerator
+          * @param {number} b The denominator
+          * @returns {number} Returns a number
+          */
+         coreUtilsService.gcd = function ( a, b ) {
+            if ( b < 0.0000001 ) {
+               return a;
+            }
+
+            return coreUtilsService.gcd(b, Math.floor(a % b));
+         };
+
+         return coreUtilsService;
+      }]);
+   })(angular.module('widgetCore'));
+})();
+
+(function () {
+
+   'use strict';
+
+   (function ( $app ) {
+
+      /**
+       * @ngdoc service
        * @name widgetCore.kambiAPIService
        * @requires ng.$http
        * @requires ng.$q
@@ -861,7 +1096,7 @@
           * containing the regions to filter
           * @param {Array.<String>|Array.<Array.<String>>|String} leagues An array of arrays, strings or a single string (comma separated)
           * containing the leagues to filter
-          * @param participants Participants, undocumented
+          * @param {Object|Array.<String>} participants Participants, undocumented
           * @param {Array.<String>|String} attributes An array of strings or a single string (comma separated) containing the attributes to filter
           * @param {Object} params An object containing the parameters to pass in the request
           * @returns {Promise} Returns a promise
@@ -910,8 +1145,8 @@
           * @methodOf widgetCore.kambiAPIService
           * @description
           * Parses filter parameters that can either be 2-level arrays, flat arrays or a string
-          * @param {Array} filter
-          * @returns {string}
+          * @param {Array.<String>} filter Filter array
+          * @returns {string} Returns a string
           */
          kambiAPIService.parseFilterParameter = function ( filter ) {
             var requestPath = '';
@@ -955,12 +1190,60 @@
           * Fetches the events based on the provided filter string
           * @param {String} filter A preformatted filter string
           * @param {Object} params An object containing the parameters to pass in the request
-          * @returns {Promise}
+          * @returns {Promise} Returns a promise
           */
          kambiAPIService.getEventsByFilter = function ( filter, params ) {
             // Todo: Update this method once documentation is available
             var requestPath = '/listView/' + filter;
             return kambiAPIService.doRequest(requestPath, params, 'v3');
+         };
+
+         /**
+          * @ngdoc overview
+          * @name widgetCore.kambiAPIService#getLiveEventsByFilter
+          * @methodOf widgetCore.kambiAPIService
+          * @description
+          * Fetches and restructures the live events by filter, returns a promise
+          * @param {String} filter A preformatted filter string
+          * @param {Object} params An object containing the parameters to pass in the request
+          * @returns {Promise} Promise
+          */
+         kambiAPIService.getLiveEventsByFilter = function ( filter, params ) {
+            var requestPath = '/listView/' + filter;
+            return kambiAPIService.doRequest(requestPath, params, 'v3').then(function ( responce ) {
+               var liveEvents = responce.data.events;
+               //Itterate through the events to change structure of mainBetOffer and remove the non live events
+               for ( var i in liveEvents ) {
+                  //Check if the event is live and restructure object
+                  if ( liveEvents[i].liveData ) {
+                     //Add mainBetOffer
+                     if ( liveEvents[i].betOffers[0] ) {
+                        liveEvents[i].mainBetOffer = liveEvents[i].betOffers[0];
+                     }
+                     if ( liveEvents[i].liveData.statistics ) {
+                        //Add sets statistics
+                        if ( liveEvents[i].liveData.statistics.setBasedStats ) {
+                           var sets = liveEvents[i].liveData.statistics.setBasedStats;
+                           liveEvents[i].liveData.statistics.sets = sets;
+                           delete liveEvents[i].liveData.statistics.setBasedStats;
+                        }
+                        //Add football statistics
+                        if ( liveEvents[i].liveData.statistics.footballStats) {
+                           var football = liveEvents[i].liveData.statistics.footballStats;
+                           liveEvents[i].liveData.statistics.football = football;
+                           delete liveEvents[i].liveData.statistics.footballStats;
+                        }
+                     }
+                     delete liveEvents[i].betOffers;
+                  } else {
+                     break;
+                  }
+               }
+               liveEvents.splice(i);
+               responce.data.liveEvents = liveEvents;
+               delete responce.data.events;
+               return responce;
+            });
          };
 
          /**
