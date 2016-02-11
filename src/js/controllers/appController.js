@@ -17,7 +17,7 @@
                      'xfbml': true,
                      'version': 'v2.4',
                      'fb_embed_type': 'post',
-                     'href': 'https://www.facebook.com/uefachampionsleague/posts/1153137961399331',
+                     'href': 'https://www.facebook.com/uefachampionsleague/posts/1165909963455464',
                      'tabs': 'timeline',
                      'small_headers': true,
                      'show_facepile': false,
@@ -31,6 +31,16 @@
                 */
                $scope.defaultHeight = 530;
 
+               // Global Facebook init function callback
+               window.fbAsyncInit = function () {
+                     FB.init($scope.args.facebook);
+                     // Listen to render event and adjust widget height based on facebook height
+                     FB.Event.subscribe('xfbml.render', function () {
+                        var el_height = $('.fb').height();
+                        $scope.setWidgetHeight(el_height);
+                     });
+               };
+
                // Listen to the window resize event and re-render the FB plugin, after 500 miliseconds
                $(window).bind('resize', _.debounce(function () {
 
@@ -41,25 +51,6 @@
                      FB.XFBML.parse();
                   }
                }, 500));
-
-               // Global Facebook init function callback
-               window.fbAsyncInit = function () {
-                  /**
-                   * Init the controller and init FB sdk
-                   */
-                  $scope.init().then(function () {
-                     $scope.locale = $scope.getConfigValue('locale');
-
-                     if ( $scope.args.facebook ) {
-                        FB.init($scope.args.facebook);
-                        // Listen to render event and adjust widget height based on facebook height
-                        FB.Event.subscribe('xfbml.render', function () {
-                           var el_height = $('.fb').height();
-                           $scope.setWidgetHeight(el_height);
-                        });
-                     }
-                  });
-               };
 
                // Inject the Facebook SDK
                var initFbSDK = function () {
@@ -87,8 +78,15 @@
                 */
                kambiWidgetService.requestPageInfo();
 
-               // Init the Facebook SDK
-               initFbSDK();
+               /**
+               * Init the controller and the FB SDK
+               */
+               $scope.init().then(function () {
+                  $scope.locale = $scope.getConfigValue('locale');
+
+                  initFbSDK();
+
+               });
 
             }]);
    })(angular.module('facebookWidget'));

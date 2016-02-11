@@ -1,5 +1,5 @@
 (function () {
-   var gulp, exec, rename, concat, uglify, jshint, stripDebug, del, sourcemaps, minifycss, htmlReplace, sass,
+   var gulp, exec, rename, concat, uglify, jshint, stripDebug, del, sourcemaps, cssnano, htmlReplace, sass,
       buildTemp, install, npmLibs, awspublish, jsonminify, gulpFile, path, foreach, json_merger;
 
    gulp = require('gulp-help')(require('gulp'));
@@ -20,7 +20,7 @@
 
    sass = require('gulp-ruby-sass');
 
-   minifycss = require('gulp-minify-css');
+   cssnano = require('gulp-cssnano');
 
    htmlReplace = require('gulp-html-replace');
 
@@ -69,7 +69,7 @@
       return gulp.src('./src/css/**/*.css')
          .pipe(concat('app.css'))
          .pipe(gulp.dest('./dist/css'))
-         .pipe(minifycss())
+         .pipe(cssnano())
          .pipe(rename('app.min.css'))
          .pipe(gulp.dest('./dist/css'));
    });
