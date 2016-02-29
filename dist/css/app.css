@@ -718,6 +718,11 @@ a {
   width: 100% !important;
 }
 
+.kw-header img {
+  display: block;
+  width: 20px;
+}
+
 
 
 /*# sourceMappingURL=app.css.map */

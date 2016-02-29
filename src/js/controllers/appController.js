@@ -12,6 +12,7 @@
                }));
 
                $scope.defaultArgs = {
+                  'title': 'UEFA Champions League',
                   'facebook': {
                      'status': true,
                      'xfbml': true,
@@ -37,7 +38,8 @@
                      // Listen to render event and adjust widget height based on facebook height
                      FB.Event.subscribe('xfbml.render', function () {
                         var el_height = $('.fb').height();
-                        $scope.setWidgetHeight(el_height);
+                        var header_height = 37;
+                        $scope.setWidgetHeight(el_height + header_height);
                      });
                };
 
