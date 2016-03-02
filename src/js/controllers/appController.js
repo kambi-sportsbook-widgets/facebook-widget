@@ -2,10 +2,10 @@
 
    'use strict';
 
-   (function ( $app ) {
+   (function ($app) {
       return $app.controller('appController',
          ['$scope', '$controller', '$http', 'kambiAPIService', 'kambiWidgetService',
-            function ( $scope, $controller, $http, kambiAPIService, kambiWidgetService ) {
+            function ($scope, $controller, $http, kambiAPIService, kambiWidgetService) {
 
                angular.extend(this, $controller('widgetCoreController', {
                   '$scope': $scope
@@ -34,19 +34,19 @@
 
                // Global Facebook init function callback
                window.fbAsyncInit = function () {
-                     FB.init($scope.args.facebook);
-                     // Listen to render event and adjust widget height based on facebook height
-                     FB.Event.subscribe('xfbml.render', function () {
-                        var el_height = $('.fb').height();
-                        var header_height = 37;
-                        $scope.setWidgetHeight(el_height + header_height);
-                     });
+                  FB.init($scope.args.facebook);
+                  // Listen to render event and adjust widget height based on facebook height
+                  FB.Event.subscribe('xfbml.render', function () {
+                     var el_height = $('.fb').height();
+                     var header_height = 37;
+                     $scope.setWidgetHeight(el_height + header_height);
+                  });
                };
 
                // Listen to the window resize event and re-render the FB plugin, after 500 miliseconds
                $(window).bind('resize', _.debounce(function () {
 
-                  if ( window.FB && FB.XFBML && FB.XFBML.parse ) {
+                  if (window.FB && FB.XFBML && FB.XFBML.parse) {
                      var fb = $('.fb');
                      var parent_width = fb.parent().width();
                      fb.attr('data-width', parent_width);
@@ -60,7 +60,7 @@
                      id = 'facebook-jssdk',
                      s = 'script',
                      fjs = document.getElementsByTagName(s)[0];
-                  if ( document.getElementById(id) ) {
+                  if (document.getElementById(id)) {
                      return;
                   }
                   js = document.createElement(s);
@@ -72,7 +72,7 @@
                /**
                 * Listener for page:info, we get here the event id from pageParam
                 */
-               $scope.$on('PAGE:INFO', function ( e, data ) {
+               $scope.$on('PAGE:INFO', function (e, data) {
                });
 
                /**
