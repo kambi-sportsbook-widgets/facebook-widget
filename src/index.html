@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="facebookWidget">
+<html>
 <head>
    <title>Facebook widget</title>
    <meta charset="UTF-8">
@@ -16,69 +16,66 @@
    <meta name="apple-mobile-web-app-status-bar-style" content="black">
    <meta name="apple-mobile-web-app-title" content="">
 
-   <!-- Include some fonts/iconfonts that we want to use -->
-   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500"/>
-   <link rel="stylesheet" type="text/css" href="//kambi-cdn.globalmouth.com/lib/dist/css/app-base-all.css"/>
-   <link rel="stylesheet" type="text/css" href="//kambi-cdn.globalmouth.com/lib/dist/css/widgets.css"/>
-
    <!-- build:css -->
    <!-- This section will be replaced in the gulp build process -->
-   <link rel="stylesheet" type="text/css" href="css/app.css"/>
+   <link rel="stylesheet" type="text/css" href="transpiled/css/app.css"/>
    <!-- endbuild -->
 
-   <!-- Include angular and the the Kambi widget api -->
-   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
-   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-sanitize.min.js"></script>
+   <!-- Customer CSS -->
+   <link rel="stylesheet" type="text/css" rv-href="widgetCss"/>
 
-   <!-- build:js -->
-   <!-- This section will be replaced in the gulp build process -->
-   <script src="js/app.js"></script>
-   <script src="js/directive/fbDirective.js"></script>
-   <!-- endbuild -->
-
-   <!-- build:corelib -->
-   <!-- This section will be replaced in the gulp build process -->
-   <script src="../node_modules/kambi-sportsbook-widget-library/src/js/controllers/widgetCoreController.js"></script>
-   <script src="../node_modules/kambi-sportsbook-widget-library/src/js/services/kambiWidgetService.js"></script>
-   <script src="../node_modules/kambi-sportsbook-widget-library/src/js/services/kambiAPIService.js"></script>
-   <script src="../node_modules/kambi-sportsbook-widget-library/src/js/services/coreUtilsService.js"></script>
-   <!-- endbuild -->
-
-   <!-- build:translate -->
-   <!-- This section will be replaced in the gulp build process -->
-   <script src="../node_modules/kambi-sportsbook-widget-core-translate/dist/translate.js"></script>
+   <!-- build:third-party-libs -->
+   <script src="https://s3-eu-west-1.amazonaws.com/kambi-widgets/widget-third-party/v1.2.0/thirdparty.js"></script>
    <!-- endbuild -->
 
    <!-- build:kambi-widget-api -->
    <!-- This section will be replaced in the gulp build process -->
-   <script src="https://c3-static.kambi.com/sb-mobileclient/widget-api/1.0.0.8/kambi-widget-api.js"></script>
+   <script src="https://c3-static.kambi.com/sb-mobileclient/widget-api/1.0.0.13/kambi-widget-api.js"></script>
    <!-- endbuild -->
 </head>
 
 <body class="kw-body">
-<div fb-directive id="fb_container" class="kw-card l-flexbox l-vertical l-expander" ng-cloak>
+<div id="fb_container" class="kw-card l-flexbox l-vertical l-expander">
 
    <header class="kw-header KambiWidget-header l-pl-16 l-flexbox l-horizontal">
       <div class="l-flexbox l-pack-center l-align-center">
          <a target="_blank" href="https://facebook.com">
             <img class="l-mr-6"
-                 src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAyNjYuOSAyNjYuOSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjY2LjkgMjY2Ljk7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDojM0U1Mjk0O30KCS5zdDF7ZmlsbDojRkZGRkZGO30KPC9zdHlsZT4KPHBhdGggaWQ9IkJsdWVfMV8iIGNsYXNzPSJzdDAiIGQ9Ik0yNTIuMiwyNjYuOWM4LjEsMCwxNC43LTYuNiwxNC43LTE0LjdWMTQuN2MwLTguMS02LjYtMTQuNy0xNC43LTE0LjdIMTQuN0M2LjYsMCwwLDYuNiwwLDE0LjcKCXYyMzcuNGMwLDguMSw2LjYsMTQuNywxNC43LDE0LjdIMjUyLjJ6Ii8+CjxwYXRoIGlkPSJmIiBjbGFzcz0ic3QxIiBkPSJNMTg0LjIsMjY2LjlWMTYzLjVoMzQuN2w1LjItNDAuM2gtMzkuOVY5Ny41YzAtMTEuNywzLjItMTkuNiwyMC0xOS42bDIxLjMsMHYtMzYKCWMtMy43LTAuNS0xNi40LTEuNi0zMS4xLTEuNmMtMzAuOCwwLTUxLjgsMTguOC01MS44LDUzLjJ2MjkuN2gtMzQuOHY0MC4zaDM0Ljh2MTAzLjRIMTg0LjJ6Ii8+Cjwvc3ZnPgo="/></a>
+                 src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAyNjYuOSAyNjYuOSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjY2LjkgMjY2Ljk7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDojM0U1Mjk0O30KCS5zdDF7ZmlsbDojRkZGRkZGO30KPC9zdHlsZT4KPHBhdGggaWQ9IkJsdWVfMV8iIGNsYXNzPSJzdDAiIGQ9Ik0yNTIuMiwyNjYuOWM4LjEsMCwxNC43LTYuNiwxNC43LTE0LjdWMTQuN2MwLTguMS02LjYtMTQuNy0xNC43LTE0LjdIMTQuN0M2LjYsMCwwLDYuNiwwLDE0LjcKCXYyMzcuNGMwLDguMSw2LjYsMTQuNywxNC43LDE0LjdIMjUyLjJ6Ii8+CjxwYXRoIGlkPSJmIiBjbGFzcz0ic3QxIiBkPSJNMTg0LjIsMjY2LjlWMTYzLjVoMzQuN2w1LjItNDAuM2gtMzkuOVY5Ny41YzAtMTEuNywzLjItMTkuNiwyMC0xOS42bDIxLjMsMHYtMzYKCWMtMy43LTAuNS0xNi40LTEuNi0zMS4xLTEuNmMtMzAuOCwwLTUxLjgsMTguOC01MS44LDUzLjJ2MjkuN2gtMzQuOHY0MC4zaDM0Ljh2MTAzLjRIMTg0LjJ6Ii8+Cjwvc3ZnPgo=" />
+         </a>
       </div>
-      <div>{{args.title}}</div>
+      <div>{args.title}</div>
       <div class="l-flexed"></div>
    </header>
 
    <main>
-      <div class="fb fb-{{args.facebook.fb_embed_type}}"
-           id="fb-container"
-           data-width="100%"
-           data-tabs="{{args.facebook.tabs}}"
-           data-small-header="{{args.facebook.small_headers}}"
-           data-show-facepile="{{args.facebook.show_facepile}}"
-           data-adapt-container-width="{{args.facebook.adapt_container_width}}"
-           data-href="{{args.facebook.href}}"></div>
+      <div id="fb-container"
+            rv-class="facebookCSSClasses"
+            rv-data-width="100%"
+            rv-data-tabs="args.tabs"
+            rv-data-small-header="args.small_headers"
+            rv-data-show-facepile="args.show_facepile"
+            rv-data-adapt-container-width="args.adapt_container_width"
+            rv-data-href="args.href"></div>
    </main>
-
 </div>
+
+<!-- build:js -->
+<!-- This section will be replaced in the gulp build process -->
+<script src="/node_modules/widget-core-library/src/transpiled/js/coreLibrary.js"></script>
+<script src="/node_modules/widget-core-library/src/transpiled/js/Module/utilModule.js"></script>
+<script src="/node_modules/widget-core-library/src/transpiled/js/Module/widgetModule.js"></script>
+<script src="/node_modules/widget-core-library/src/transpiled/js/Module/offeringModule.js"></script>
+<script src="/node_modules/widget-core-library/src/transpiled/js/Module/statisticsModule.js"></script>
+<script src="/node_modules/widget-core-library/src/transpiled/js/Module/translationModule.js"></script>
+<script src="/node_modules/widget-core-library/src/transpiled/js/Component/Component.js"></script>
+<script src="/node_modules/widget-core-library/src/transpiled/js/Component/OutcomeComponent/OutcomeComponent.js"></script>
+<script>
+   CoreLibrary.development = true;
+</script>
+
+<script src="transpiled/js/app.js"></script>
+<!-- endbuild -->
+
 </body>
 </html>

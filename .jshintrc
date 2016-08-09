@@ -1,5 +1,5 @@
 {
-   "predef": [ "rivets", "Stapes" ],
+   "esversion": 6,
    "bitwise": true,
    "camelcase": false,
    "curly": true,
@@ -11,7 +11,6 @@
    "globalstrict": false,
    "immed": true,
    "indent": 3,
-   "maxcomplexity": 10,
    "maxdepth": 8,
    "maxerr": false,
    "maxlen": 160,
@@ -60,6 +59,12 @@
       "MobileDetect": true,
       "FastClick": true,
       "FB": true,
-      "addToHomeScreen": true
+      "addToHomeScreen": true,
+      "rivets": true,
+      "Stapes": true,
+      "Promise": true,
+      "CoreLibrary": true,
+      "fetch": true,
+      "sightglass": true
    }
 }
