@@ -24,9 +24,8 @@
          var fb_container = document.getElementById('fb-container');
 
          // Global Facebook init function callback
-         window.fbAsyncInit = function () {
-            FB.init(this.scope);
-            FB.XFBML.parse();
+         window.fbAsyncInit = () => {
+            FB.init(this.scope.args);
             // Listen to render event and adjust widget height based on facebook height
             FB.Event.subscribe('xfbml.render', function () {
                var el_height;
@@ -39,6 +38,10 @@
                }, 100);
             });
          };
+
+         window.addEventListener('resize', () => {
+            FB.XFBML.parse();
+         });
 
          this.scope.facebookCSSClasses = 'fb fb-' + this.scope.args.fb_embed_type;
 
