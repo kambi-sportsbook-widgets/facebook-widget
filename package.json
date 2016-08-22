@@ -1,6 +1,6 @@
 {
    "name": "facebook-widget",
-   "version": "1.0.0",
+   "version": "1.0.1",
    "description": "Facebook embeded pages widget",
    "main": "dist/index.html",
    "scripts": {
@@ -16,7 +16,7 @@
       "gulp": "^3.9.0",
       "require-dir": "^0.3.0",
       "widget-core-library": "git+ssh://git@github.com/kambi-sportsbook-widgets/widget-core-library.git#v2.8.2",
-      "widget-build-tools": "git+ssh://git@github.com:kambi-sportsbook-widgets/widget-build-tools.git#v1.4.3"
+      "widget-build-tools": "git+ssh://git@github.com:kambi-sportsbook-widgets/widget-build-tools.git#v1.4.4"
    },
    "license": "MIT",
    "bugs": {
