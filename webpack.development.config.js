@@ -1,7 +1,9 @@
-var path = require('path');
+const path = require('path');
 const webpack = require('webpack');
+const validate = require('webpack-validator');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+module.exports = validate({
    entry: {
       app: ['./src/index.js']
    },
@@ -19,21 +21,20 @@ module.exports = {
          {test: /\.(ttf|woff)$|\.eot$/, loader: 'file', query: {name: 'fonts/[name].[ext]'},},
          {test: /\.scss$/, loaders: ['style', 'css?sourceMap', 'sass?sourceMap']},
          {test: /\.html/, loader: 'html-loader'},
-         {test: /\.json$/, loader: 'json'}]
+         {test: /\.json$/, loader: 'json-loader'}]
    },
    devtool: 'source-map',
    output: {
       path: path.resolve(__dirname, 'dist'),
-      publicPath: 'http://localhost:8080/',
       filename: 'js/[name].js'
    },
    devServer: {
-      contentBase: './dist'
-   },
-   sassLoader: {
-      includePaths: [path.resolve(__dirname, './src/scss')]
+      contentBase: './src'
    },
    resolve: {
-      extensions: ['', '.js', '.json', '.scss']
-   }
-};
+      extensions: ['', '.js', '.json', '.scss', '.html']
+   },
+   plugins: [new HtmlWebpackPlugin({
+      template: 'src/index.html'
+   })]
+});
