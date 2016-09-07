@@ -7,9 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "changelog": "changelog kambi-sportsbook-widgets/facebook-widget all -m > CHANGELOG.md",
     "clean": "rm -rf ./dist",
-    "build:dev": "webpack --config webpack.development.config.js --watch --verbose --display-modules --display-error-details",
     "build:prod": "webpack --config webpack.production.config.js -p --verbose --display-modules --display-error-details",
-    "watch": "webpack-dev-server --hot --inline --config webpack.development.config.js"
+    "build:dev": "webpack-dev-server --hot --inline --config webpack.development.config.js"
   },
   "repository": {
     "type": "git",
