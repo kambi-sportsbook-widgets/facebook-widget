@@ -1,3 +1,14 @@
+import 'widget-core-library/src/transpiled/js/coreLibrary.js';
+import 'widget-core-library/src/transpiled/js/Module/utilModule.js';
+import 'widget-core-library/src/transpiled/js/Module/widgetModule.js';
+import 'widget-core-library/src/transpiled/js/Module/offeringModule.js';
+import 'widget-core-library/src/transpiled/js/Module/statisticsModule.js';
+import 'widget-core-library/src/transpiled/js/Module/translationModule.js';
+import 'widget-core-library/src/transpiled/js/Component/Component.js';
+import 'widget-core-library/src/transpiled/js/Component/HeaderComponent/HeaderComponent.js';
+import 'widget-core-library/src/transpiled/js/Component/OutcomeComponent/OutcomeComponent.js';
+import 'widget-core-library/src/transpiled/js/Component/PaginationComponent/PaginationComponent.js';
+
 (function () {
    'use strict';
 
