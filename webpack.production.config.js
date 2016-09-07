@@ -2,6 +2,7 @@ const path = require('path');
 const validate = require('webpack-validator');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = validate({
    entry: {
@@ -26,7 +27,7 @@ module.exports = validate({
    },
    output: {
       path: path.resolve(__dirname, 'dist'),
-      publicPath: '/dist/',
+      publicPath: '/widget3/',
       filename: '[name].js'
    },
    plugins: [
@@ -39,7 +40,14 @@ module.exports = validate({
       }),
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.optimize.AggressiveMergingPlugin(),
-      new HtmlWebpackPlugin({ template: 'src/index.html'})
+      new HtmlWebpackPlugin({ template: 'src/index.html'}),
+      new CopyWebpackPlugin([{
+         from: './src/i18n',
+         to: 'i18n'
+      },{
+         from: './src/mockSetupData.json',
+         to: '.'
+      }])
    ],
    resolve: {
       extensions: ['', '.js', '.json', '.scss']
