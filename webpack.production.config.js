@@ -6,11 +6,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = validate({
    entry: {
-      'core.min': ['./src/index.js']
+      'main': ['./src/index.js']
    },
    module: {
       preLoaders: [
-         { test: /.js$/, exclude: /node_modules/, loader: 'jshint-loader' }
+
       ],
       loaders: [
          {test: /\.svg/, loader: 'svg-url-loader'},
@@ -33,11 +33,11 @@ module.exports = validate({
    plugins: [
       new webpack.optimize.CommonsChunkPlugin('common.js'),
       new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin({
+     /* new webpack.optimize.UglifyJsPlugin({
          compressor: {
             warnings: true,
          },
-      }),
+      }),*/
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.optimize.AggressiveMergingPlugin(),
       new HtmlWebpackPlugin({ template: 'src/index.html'}),
