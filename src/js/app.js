@@ -1,5 +1,6 @@
 import CoreLibrary from 'widget-core-library';
-console.log(CoreLibrary);
+
+CoreLibrary.development = true;
 
 export default (function () {
 
@@ -19,12 +20,10 @@ export default (function () {
       },
 
       constructor () {
-         console.log('constructor');
          CoreLibrary.Component.apply(this, arguments);
       },
 
       init () {
-         console.log('init');
          var fb_container = document.getElementById('fb-container');
          // Global Facebook init function callback
          window.fbAsyncInit = () => {
@@ -63,8 +62,7 @@ export default (function () {
       }
    });
 
-   var facebookWidget = new FacebookWidget({
+   new FacebookWidget({
       rootElement: 'html'
    });
-
 });
