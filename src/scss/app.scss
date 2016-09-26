@@ -1,5 +1,16 @@
 @import '~compass-mixins';
 @import '~widget-core-library/dist/scss/app-base-all.scss';
-@import 'widget/variables';
-@import 'widget/general';
-@import 'widget/widget-theme';
+
+.fb, .fb span, .fb span iframe[style] {
+   width: 100% !important;
+   height: 100%;
+}
+
+.kw-header {
+   border-bottom: none;
+
+   img {
+      display: block;
+      width: 20px;
+   }
+}
