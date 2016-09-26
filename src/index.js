@@ -1,10 +1,11 @@
-import CoreLibrary from 'widget-core-library';
+import { coreLibrary, widgetModule } from 'widget-core-library';
+// import CoreLibrary from 'widget-core-library';
 import './index.html';
 import './scss/app.scss';
 
-CoreLibrary.development = true;
+// CoreLibrary.development = true;
 
-CoreLibrary.init({
+coreLibrary.init({
    title: 'UEFA Champions League',
    status: true,
    xfbml: true,
@@ -16,20 +17,34 @@ CoreLibrary.init({
    show_facepile: false,
    adapt_container_width: true
 }).then(() => {
-   console.log(CoreLibrary.args);
-   var fbContainer = document.getElementById('fb-container');
+   const args = coreLibrary.args;
+   document.getElementById('title').textContent = args.title;
+   const fbContainer = document.getElementById('fb-container');
+   fbContainer.classList.add('fb-' + args.fb_embed_type);
+
+   const attributes = [
+      ['data-width', '100%'],
+      ['data-tabs', args.tabs],
+      ['data-small-header', args.small_headers],
+      ['data-show-facepile', args.show_facepile],
+      ['data-adapt-container-width', args.adapt_container_width],
+      ['data-href', args.href]
+   ];
+   attributes.forEach((att) => {
+      fbContainer.setAttribute(att[0], att[1]);
+   });
+
    // Global Facebook init function callback
    window.fbAsyncInit = () => {
-      console.log('aaaaaaasxaaaaaaaaaaaaaa');
-      FB.init(CoreLibrary.args);
+      FB.init(args);
       // Listen to render event and adjust widget height based on facebook height
       FB.Event.subscribe('xfbml.render', function () {
-         var elHeight;
-         var headerHeight = 37;
+         let elHeight;
+         const headerHeight = 37;
          setTimeout(function () {
             elHeight = fbContainer.clientHeight;
             if ( elHeight > 100 ) {
-               CoreLibrary.widgetModule.setWidgetHeight(elHeight + headerHeight);
+               widgetModule.setWidgetHeight(elHeight + headerHeight);
             }
          }, 100);
       });
@@ -40,19 +55,13 @@ CoreLibrary.init({
    });
 
    // Inject the Facebook SDK
-   window.initFB = function() {
-      var js,
-         id = 'facebook-jssdk',
-         s = 'script',
-         fjs = document.getElementsByTagName(s)[0];
-      if ( document.getElementById(id) === null ) {
-         js = document.createElement(s);
-         js.id = id;
-         js.src = 'http://connect.facebook.net/' + CoreLibrary.config.locale + '/all.js';
-         fjs.parentNode.insertBefore(js, fjs);
-      }
+   const id = 'facebook-jssdk';
+   if ( document.getElementById(id) === null ) {
+      const s = 'script';
+      const js = document.createElement(s);
+      const fjs = document.getElementsByTagName(s)[0];
+      js.id = id;
+      js.src = 'http://connect.facebook.net/' + coreLibrary.config.locale + '/all.js';
+      fjs.parentNode.insertBefore(js, fjs);
    }
-   window.initFB();
-
-   // this.scope.facebookCSSClasses = 'fb fb-' + this.scope.args.fb_embed_type;
 });

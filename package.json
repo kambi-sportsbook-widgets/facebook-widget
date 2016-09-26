@@ -13,7 +13,8 @@
     "url": "git+ssh://git@github.com/kambi-sportsbook-widgets/facebook-widget.git"
   },
   "dependencies": {
-    "compass-mixins": "^0.12.10"
+    "compass-mixins": "^0.12.10",
+    "widget-core-library": "git+ssh://git@github.com/kambi-sportsbook-widgets/widget-core-library.git#KSBWI-710"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",

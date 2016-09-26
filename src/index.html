@@ -13,8 +13,6 @@
    <meta name="apple-mobile-web-app-capable" content="yes">
    <meta name="apple-mobile-web-app-status-bar-style" content="black">
    <meta name="apple-mobile-web-app-title" content="">
-   <link rel="stylesheet" type="text/css" rv-href="widgetCss"/>
-   <script src="https://c3-static.kambi.com/sb-mobileclient/widget-api/1.0.0.13/kambi-widget-api.js"></script>
 </head>
 <body class="kw-body">
 <div id="fb_container" class="kw-card l-flexbox l-vertical l-expander">
@@ -25,18 +23,11 @@
                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAyNjYuOSAyNjYuOSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjY2LjkgMjY2Ljk7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDojM0U1Mjk0O30KCS5zdDF7ZmlsbDojRkZGRkZGO30KPC9zdHlsZT4KPHBhdGggaWQ9IkJsdWVfMV8iIGNsYXNzPSJzdDAiIGQ9Ik0yNTIuMiwyNjYuOWM4LjEsMCwxNC43LTYuNiwxNC43LTE0LjdWMTQuN2MwLTguMS02LjYtMTQuNy0xNC43LTE0LjdIMTQuN0M2LjYsMCwwLDYuNiwwLDE0LjcKCXYyMzcuNGMwLDguMSw2LjYsMTQuNywxNC43LDE0LjdIMjUyLjJ6Ii8+CjxwYXRoIGlkPSJmIiBjbGFzcz0ic3QxIiBkPSJNMTg0LjIsMjY2LjlWMTYzLjVoMzQuN2w1LjItNDAuM2gtMzkuOVY5Ny41YzAtMTEuNywzLjItMTkuNiwyMC0xOS42bDIxLjMsMHYtMzYKCWMtMy43LTAuNS0xNi40LTEuNi0zMS4xLTEuNmMtMzAuOCwwLTUxLjgsMTguOC01MS44LDUzLjJ2MjkuN2gtMzQuOHY0MC4zaDM0Ljh2MTAzLjRIMTg0LjJ6Ii8+Cjwvc3ZnPgo=" />
          </a>
       </div>
-      <div>{args.title}</div>
+      <div id='title'></div>
       <div class="l-flexed"></div>
    </header>
    <main>
-      <div id="fb-container"
-            rv-class="facebookCSSClasses"
-            rv-data-width="100%"
-            rv-data-tabs="args.tabs"
-            rv-data-small-header="args.small_headers"
-            rv-data-show-facepile="args.show_facepile"
-            rv-data-adapt-container-width="args.adapt_container_width"
-            rv-data-href="args.href"></div>
+      <div id="fb-container" class='fb'></div>
    </main>
 </div>
 </body>
