@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const validate = require('webpack-validator');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const fs = require('fs');
 
 module.exports = validate({
    entry: {
@@ -9,21 +10,26 @@ module.exports = validate({
    },
    module: {
       preLoaders: [
-         //{ test: /.js$/, exclude: /node_modules/, loader: 'jshint-loader' }
+         //{ test: /.js$/, exclude: /node_modules/, loader: 'jshint-loader' },
+         {
+            test: /\.js$/,
+            loader: 'source-maps-loader'
+         }
       ],
       loaders: [
-         {test: /\.svg/, loader: 'svg-url-loader'},
-         {test: /.js$/, exclude: /node_modules/, loader: 'babel-loader', query: {presets: ['es2015']}},
+         { test: /\.svg/, loader: 'svg-url-loader' },
+         { test: /.js$/, exclude: /node_modules/, loader: 'babel-loader', query: { presets: ['es2015'] } },
          {
             test: /\.(jpe|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,
             exclude: /node_modules/,
             loader: 'url-loader?importLoaders=1&limit=100000'
          },
-         {test: /\.(ttf|woff)$|\.eot$/, loader: 'file', query: {name: 'fonts/[name].[ext]'},},
-         {test: /\.scss$/, loaders: ['style', 'css?sourceMap', 'sass?sourceMap']},
-         {test: /\.html/, loader: 'html-loader'},
-         {test: /\.json$/, loader: 'json-loader'}]
+         { test: /\.(ttf|woff)$|\.eot$/, loader: 'file', query: { name: 'fonts/[name].[ext]' }, },
+         { test: /\.scss$/, loaders: ['style', 'css?sourceMap', 'sass?sourceMap'] },
+         { test: /\.html/, loader: 'html-loader' },
+         { test: /\.json$/, loader: 'json-loader' }]
    },
+   resolveLoader: { root: fs.existsSync(path.join(__dirname, "node_modules")) ? path.join(__dirname, "node_modules") : path.resolve('./../') },
    devtool: 'source-map',
    output: {
       path: path.resolve(__dirname, 'dist'),
