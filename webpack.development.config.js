@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const validate = require('webpack-validator');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const fs = require('fs');
 
 module.exports = validate({
    entry: {
@@ -9,8 +10,11 @@ module.exports = validate({
    },
    module: {
       preLoaders: [
-         { test: /.js$/, exclude: /node_modules/, loader: 'jshint-loader' },
-         { test: /\.js$/, loader: 'source-maps-loader' },
+         //{ test: /.js$/, exclude: /node_modules/, loader: 'jshint-loader' },
+         {
+            test: /\.js$/,
+            loader: 'source-maps-loader'
+         }
       ],
       loaders: [
          { test: /\.svg/, loader: 'svg-url-loader' },
@@ -25,6 +29,7 @@ module.exports = validate({
          { test: /\.html/, loader: 'html-loader' },
          { test: /\.json$/, loader: 'json-loader' }]
    },
+   resolveLoader: { root: fs.existsSync(path.join(__dirname, "node_modules")) ? path.join(__dirname, "node_modules") : path.resolve('./../') },
    devtool: 'source-map',
    output: {
       path: path.resolve(__dirname, 'dist'),
