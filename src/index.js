@@ -50,8 +50,12 @@ coreLibrary.init({
       });
    };
 
+   let resizeTimeout = null;
    window.addEventListener('resize', () => {
-      FB.XFBML.parse();
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+         FB.XFBML.parse();
+      }, 300);
    });
 
    // Inject the Facebook SDK

@@ -1,16 +1,13 @@
 @import '~compass-mixins';
-@import '~widget-core-library/dist/scss/app-base-all.scss';
+@import '~widget-core-library/dist/scss/core.scss';
 
 .fb, .fb span, .fb span iframe[style] {
    width: 100% !important;
    height: 100%;
 }
 
-.kw-header {
-   border-bottom: none;
-
-   img {
-      display: block;
-      width: 20px;
-   }
+img {
+   display: block;
+   width: 20px;
+   height: 20px;
 }
