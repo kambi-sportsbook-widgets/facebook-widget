@@ -2,8 +2,6 @@ import { coreLibrary, widgetModule } from 'widget-core-library';
 import './index.html';
 import './scss/app.scss';
 
-// CoreLibrary.development = true;
-
 coreLibrary.init({
    title: 'UEFA Champions League',
    status: true,
@@ -33,6 +31,7 @@ coreLibrary.init({
       fbContainer.setAttribute(att[0], att[1]);
    });
 
+   let fbIframe = null;
    // Global Facebook init function callback
    window.fbAsyncInit = () => {
       FB.init(args);
@@ -41,7 +40,10 @@ coreLibrary.init({
          let elHeight;
          const headerHeight = 37;
          setTimeout(function () {
-            elHeight = fbContainer.clientHeight;
+            if (fbIframe == null) {
+               fbIframe = document.getElementsByTagName('iframe')[0];
+            }
+            elHeight = fbIframe.clientHeight;
             if ( elHeight > 100 ) {
                widgetModule.setWidgetHeight(elHeight + headerHeight);
             }
@@ -64,7 +66,7 @@ coreLibrary.init({
       const js = document.createElement(s);
       const fjs = document.getElementsByTagName(s)[0];
       js.id = id;
-      js.src = 'http://connect.facebook.net/' + coreLibrary.config.locale + '/all.js';
+      js.src = 'https://connect.facebook.net/' + coreLibrary.config.locale + '/all.js';
       fjs.parentNode.insertBefore(js, fjs);
    }
 });

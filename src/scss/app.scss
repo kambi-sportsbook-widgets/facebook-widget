@@ -6,8 +6,16 @@
    height: 100%;
 }
 
+header {
+   min-height: 37px;
+}
+
 img {
    display: block;
    width: 20px;
    height: 20px;
+}
+
+body, html, main, main * {
+   height: 100%;
 }
