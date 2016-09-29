@@ -1,5 +1,4 @@
 import { coreLibrary, widgetModule } from 'widget-core-library';
-// import CoreLibrary from 'widget-core-library';
 import './index.html';
 import './scss/app.scss';
 
