@@ -6,7 +6,9 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "build:prod": "webpack --config ./node_modules/widget-build-tools/webpack.production.config.js --verbose --display-modules --display-error-details",
-    "build:dev": "webpack-dev-server --debug --devtool source-map --output-pathinfo --hot --watch --inline --config ./node_modules/widget-build-tools/webpack.development.config.js"
+    "build:dev": "webpack-dev-server --debug --devtool source-map --output-pathinfo --hot --watch --inline --config ./node_modules/widget-build-tools/webpack.development.config.js",
+    "dev": "widget-build-tools build:dev",
+    "prod": "widget-build-tools build:prod"
   },
   "repository": {
     "type": "git",
