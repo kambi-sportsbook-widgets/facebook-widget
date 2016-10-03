@@ -4,13 +4,13 @@
   "description": "Facebook embeded pages widget",
   "main": "dist/index.html",
   "scripts": {
-    "clean": "rm -rf ./dist",
     "build:prod": "webpack --config ./node_modules/widget-build-tools/webpack.production.config.js --verbose --display-modules --display-error-details",
     "build:dev": "webpack-dev-server --debug --devtool source-map --output-pathinfo --hot --watch --inline --config ./node_modules/widget-build-tools/webpack.development.config.js",
-    "dev": "build-tools build --dev",
-    "prod": "build-tools build --prod",
-    "preversion": "build-tools preversion",
-    "postversion": "build-tools postversion"
+    "clean": "kambi-widgets-cli clean",
+    "start": "kambi-widgets-cli build --dev",
+    "build": "kambi-widgets-cli build --prod",
+    "preversion": "kambi-widgets-cli preversion",
+    "postversion": "kambi-widgets-cli postversion"
   },
   "repository": {
     "type": "git",
