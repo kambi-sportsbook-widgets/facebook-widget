@@ -1,4 +1,4 @@
-import { coreLibrary, widgetModule } from 'widget-core-library';
+import { coreLibrary, widgetModule } from 'kambi-widget-core-library';
 import './index.html';
 import './scss/app.scss';
 
